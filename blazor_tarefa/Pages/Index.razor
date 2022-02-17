@@ -1,0 +1,97 @@
+﻿@page "/"
+@*injetar servicos nos componentes*@
+@inject HttpClient http 
+
+<h1>Tarefas</h1>
+
+
+@if(tarefas == null) 
+{
+   <p>Carregando....</p>
+
+}
+else if (!tarefas.Any()) 
+{
+    <p>Ainda nao existem tarefas</p>
+
+}
+else 
+{ 
+<table class="table">
+    <thead>
+        <tr>
+            <th>Data</th>
+            <th>Descriçao</th>
+            <th>Concluida</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in tarefas)
+        {
+            <tr>
+                <td><button @onclick="@(() => RemoveTarefa(item.ID))"><i class="oi oi-trash"></i></button></td>
+                <td>@item.DataCriacao</td>
+                <td>@item.Descricao</td>
+                <td><input type="checkbox" @bind="item.Concluida" />@item.Concluida</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+}
+
+@if (tarefas != null) 
+{ 
+<div class="form-group">
+    <label>Tarefa</label>
+    <input type="Text" placeholder="Informe a tarefa" @bind="novaTarefa" />
+    <button class="btn btn-primary" @onclick="AdicionarNovaTarefa">Registrar Tarefa</button>
+</div>
+}
+
+@code {
+
+    // inicializar o componente
+    protected override async Task OnInitializedAsync()  // whyyyyyyyyyyyy
+    {
+        tarefas = await http.GetFromJsonAsync<List<Tarefa>>("dados/tarefas.json");
+
+    }
+
+    // Local Class
+    public class Tarefa
+    {
+        // git e como se fosse uma sequence 
+        public Guid ID { get; set; }
+        public String Descricao { get; set; }
+        public bool Concluida { get; set; }
+        public DateTime DataCriacao { get; set; }
+
+    }
+
+    private string novaTarefa = "";
+
+    private List<Tarefa> tarefas = new List<Tarefa>();
+
+    void AdicionarNovaTarefa()
+    {
+        if (!string.IsNullOrWhiteSpace(novaTarefa))  // whyyyyyyyyyyyyy
+        {
+            tarefas.Add(new Tarefa
+            {
+                DataCriacao = DateTime.Now,
+                Descricao = novaTarefa,
+                ID = Guid.NewGuid()
+            });
+            novaTarefa = "";
+        }
+
+    }
+
+    private void RemoveTarefa(Guid id)
+    {
+        tarefas.Remove(tarefas.First(x => x.ID == id));
+    }
+
+
+}
