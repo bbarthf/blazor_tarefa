@@ -1,0 +1,15 @@
+﻿@page "/databinding"
+
+<h1>@nome</h1>
+<hr/>
+
+@*O valor atualiza apenas dando tab no teclado*@ 
+<input @bind="nome"/>
+<hr />
+
+@*O valor e atualizado em tempo real de execucao*@
+<input @bind-value="nome" @bind-value:event="oninput"/>
+
+@code {
+    public string nome { get; set; } = "Blazor";
+}

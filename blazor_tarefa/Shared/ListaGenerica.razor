@@ -1,0 +1,68 @@
+﻿@typeparam Titem
+
+@if (Listaitem == null)
+{
+    if (Carregando == null)
+    {
+        <text>Carregando</text>
+    }
+    else
+    {
+        @Carregando
+    }
+    @*<p>Carregando....</p>*@
+    <!--<Alert>-->
+    @*<span style="color:blue">carregando tarefas... </span>*@
+    <!--<Conteudo1>
+            <h1>Aguarde...</h1>
+        </Conteudo1>
+        <Conteudo2>
+            <h2>Carregando</h2>
+        </Conteudo2>
+    </Alert>-->
+}
+else if (!Listaitem.Any())
+{
+
+    if (SemRegistro == null)
+    {
+       <text>Nao existem tarefas</text>
+    }
+    else
+    {
+        @SemRegistro
+    }
+}
+else
+{
+  foreach(var elemento in Listaitem)
+    { 
+        @Lista(elemento)
+    }
+
+}
+
+    @*<p>Ainda nao existem tarefas</p>*@
+    <!--<Alert>
+        <Conteudo1>
+            <h1>Ainda nao existem registros</h1>
+        </Conteudo1>
+        <Conteudo2>
+            <h2>Por favor inclua algumas tarefas</h2>
+        </Conteudo2>-->
+    @*<div class="card">
+            <div class = "card-body">
+                voce precisa cadastrar algumas tarefas
+            </div>
+        </div>*@
+    <!--</Alert>-->
+}
+
+@code
+{
+    [Parameter] public RenderFragment Carregando { get; set; }
+    [Parameter] public RenderFragment SemRegistro { get; set; }
+    [Parameter] public List<Titem> Listaitem {get; set; }
+    [Parameter] public RenderFragment<Titem> Lista { get; set;}
+}
+

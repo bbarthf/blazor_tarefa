@@ -1,0 +1,28 @@
+﻿<div>
+    @if (Conteudo1 == null)
+    {
+        <span style="color:black">Texto Padrao</span>
+    }
+    else
+    {
+        @Conteudo1;
+    }
+</div>
+<div>
+    @if (Conteudo2 == null)
+    {
+        <span style="color:black">Texto Padrao</span>
+    }
+    else
+    {
+        @Conteudo2;
+    }
+</div>
+
+
+@code {
+
+    //[Parameter] public string Mensagem { get; set; }
+    [Parameter] public RenderFragment Conteudo1 { get; set; }
+    [Parameter] public RenderFragment Conteudo2 { get; set; }
+}
