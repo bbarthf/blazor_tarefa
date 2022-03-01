@@ -1,4 +1,5 @@
 ﻿@*injetar servicos nos componentes*@
+@inject IJSRuntime js 
 <h1>Titulo</h1>
 
     <table class="table">
@@ -36,8 +37,9 @@
     [Parameter] public string Titulo { get; set; }
 
     private string novaTarefa = "";
+    static int TotalTarefas = 0;
 
-    void AdicionarNovaTarefa()
+    async void AdicionarNovaTarefa()
     {
         if (!string.IsNullOrWhiteSpace(novaTarefa))
         {
@@ -48,13 +50,28 @@
                 ID = Guid.NewGuid()
             });
             novaTarefa = "";
+            TotalTarefas = tarefas.Count();
+            await js.InvokeVoidAsync("getTotalTarefas");
         }
 
     }
 
-    private void RemoveTarefa(Tarefa tarefa)
+    [JSInvokable]
+    public static Task<int> ObterTotalTarefa()
     {
-        tarefas.Remove(tarefas.First(x => x.ID == tarefa.ID));
+        return Task.FromResult(TotalTarefas);
+    }
+
+    private async Task RemoveTarefa(Tarefa tarefa)
+    {
+        var resultado = await js.InvokeAsync<bool>("confirm", "Excluir Tarefa?");
+
+        if (resultado)
+        {
+            tarefas.Remove(tarefas.First(x => x.ID == tarefa.ID));
+            //await js.InvokeVoidAsync("alert", "Tarefa excluida com sucesso");
+            await js.InvokeAsync<object>("MostraAlerta", "Ok, Tarefa Excluida");
+        }
     }
 
 }
