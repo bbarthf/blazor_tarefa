@@ -22,6 +22,13 @@
         </tbody>
     </table>
 
+
+
+<Confirma @ref="confirmacao" onCancela="CancelaConfirmacao" onConfirma="RemoverTarefaConfirmacao">
+   <div>Deseja Excluir esta tarefa</div>
+</Confirma>
+
+
 @if (tarefas != null)
 {
     <div class="form-group">
@@ -38,6 +45,9 @@
 
     private string novaTarefa = "";
     static int TotalTarefas = 0;
+    Confirma confirmacao;
+
+    Tarefa tarefaRemover;
 
     async void AdicionarNovaTarefa()
     {
@@ -70,16 +80,32 @@
         return Task.FromResult(TotalTarefas);
     }
 
-    private async Task RemoveTarefa(Tarefa tarefa)
+    //private async Task RemoveTarefa(Tarefa tarefa)
+    private void RemoveTarefa(Tarefa tarefa)
     {
-        var resultado = await js.InvokeAsync<bool>("confirm", "Excluir Tarefa?");
+        confirmacao.Exibir();
+        tarefaRemover = tarefa;
+        //var resultado = await js.InvokeAsync<bool>("confirm", "Excluir Tarefa?");
 
-        if (resultado)
-        {
-            tarefas.Remove(tarefas.First(x => x.ID == tarefa.ID));
-            //await js.InvokeVoidAsync("alert", "Tarefa excluida com sucesso");
-            await js.InvokeAsync<object>("MostraAlerta", "Ok, Tarefa Excluida");
-        }
+        //if (resultado)
+        //{
+        //tarefas.Remove(tarefas.First(x => x.ID == tarefa.ID));
+        //await js.InvokeVoidAsync("alert", "Tarefa excluida com sucesso");
+        //  await js.InvokeAsync<object>("MostraAlerta", "Ok, Tarefa Excluida");
+        //}
+    }
+
+    void CancelaConfirmacao()
+    {
+        confirmacao.Ocultar();
+        tarefaRemover = null;
+    }
+
+    void RemoverTarefaConfirmacao()
+    {
+        tarefas.Remove(tarefaRemover);
+        tarefaRemover = null;
+        confirmacao.Ocultar();
     }
 
 }

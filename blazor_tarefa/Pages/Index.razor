@@ -1,6 +1,7 @@
 ﻿@page "/"
 @inject HttpClient http
 <h1>Tarefas</h1>
+
 <Tarefas tarefas="GetTarefas()" Titulo="List de tarefas"/>
 
 @code{
@@ -10,6 +11,7 @@
     // inicializar o componente
     protected override async Task OnInitializedAsync()  //
     {
+       
         tarefas = await http.GetFromJsonAsync<List<Tarefa>>("dados/tarefas.json");
 
     }
